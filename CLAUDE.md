@@ -37,6 +37,10 @@ uv run ruff format .        # Direct ruff format
 fli-mcp                     # Run MCP server on STDIO
 fli-mcp-http               # Run MCP server over HTTP
 
+# Install to Claude Desktop (after making changes)
+uv tool install --reinstall --from . flights
+# Then restart Claude Desktop to pick up the new version
+
 # Documentation
 make docs                   # Build MkDocs documentation
 uv run mkdocs serve         # Serve docs locally
