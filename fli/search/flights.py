@@ -15,6 +15,7 @@ from fli.models import (
     FlightResult,
     FlightSearchFilters,
 )
+from fli.models.google_flights.base import CodeshareInfo
 from fli.models.google_flights.base import TripType
 from fli.search.client import get_client
 
@@ -122,6 +123,8 @@ class SearchFlights:
                     departure_datetime=SearchFlights._parse_datetime(fl[20], fl[8]),
                     arrival_datetime=SearchFlights._parse_datetime(fl[21], fl[10]),
                     duration=fl[11],
+                    aircraft=fl[17] if len(fl) > 17 else None,
+                    codeshares=SearchFlights._parse_codeshares(fl[15]) if len(fl) > 15 else None,
                 )
                 for fl in data[0][2]
             ],
@@ -180,6 +183,28 @@ class SearchFlights:
         if airline_code[0].isdigit():
             airline_code = f"_{airline_code}"
         return getattr(Airline, airline_code)
+
+    @staticmethod
+    def _parse_codeshares(raw: list | None) -> list[CodeshareInfo] | None:
+        """Parse codeshare/marketing airline data from raw API response.
+
+        Args:
+            raw: List of [airline_code, flight_number, unused, airline_name] entries
+
+        Returns:
+            List of CodeshareInfo objects, or None if no codeshare data
+
+        """
+        if not raw:
+            return None
+        return [
+            CodeshareInfo(
+                airline_code=entry[0],
+                flight_number=entry[1],
+                airline_name=entry[3] if len(entry) > 3 else None,
+            )
+            for entry in raw
+        ]
 
     @staticmethod
     def _parse_airport(airport_code: str) -> Airport:

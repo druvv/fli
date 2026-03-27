@@ -153,7 +153,7 @@ class DateSearchParams(BaseModel):
 
 def _serialize_flight_leg(leg: Any) -> dict[str, Any]:
     """Serialize a single flight leg to a dictionary."""
-    return {
+    result = {
         "departure_airport": leg.departure_airport,
         "arrival_airport": leg.arrival_airport,
         "departure_time": leg.departure_datetime,
@@ -161,7 +161,18 @@ def _serialize_flight_leg(leg: Any) -> dict[str, Any]:
         "duration": leg.duration,
         "airline": leg.airline,
         "flight_number": leg.flight_number,
+        "aircraft": leg.aircraft,
     }
+    if leg.codeshares:
+        result["codeshares"] = [
+            {
+                "airline_code": cs.airline_code,
+                "flight_number": cs.flight_number,
+                "airline_name": cs.airline_name,
+            }
+            for cs in leg.codeshares
+        ]
+    return result
 
 
 def _serialize_flight_result(flight: Any, is_round_trip: bool = False) -> dict[str, Any]:
@@ -387,6 +398,11 @@ def search_flights(
 
     Returns a list of available flights with prices, durations, and leg details.
     Supports one-way and round-trip searches with various filtering options.
+
+    Each leg includes the operating airline, aircraft type, and codeshare info.
+    Codeshares indicate which other airlines sell the same flight under their own
+    codes. When booking a codeshare, passengers can typically credit miles to
+    either the operating or marketing airline's loyalty program.
     """
     effective_departure_window = departure_window or CONFIG.default_departure_window
     params = FlightSearchParams(
