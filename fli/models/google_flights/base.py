@@ -9,6 +9,7 @@ from enum import Enum
 
 from pydantic import (
     BaseModel,
+    Field,
     NonNegativeFloat,
     NonNegativeInt,
     PositiveInt,
@@ -121,16 +122,42 @@ class LayoverRestrictions(BaseModel):
     max_duration: PositiveInt | None = None
 
 
+class CodeshareInfo(BaseModel):
+    """A marketing airline that also sells this flight under its own flight number.
+
+    When a flight is codeshared, multiple airlines sell the same physical flight.
+    The operating airline flies the plane, while codeshare partners sell tickets
+    under their own codes. When booking, passengers can typically choose which
+    loyalty program to credit miles to (the marketing or operating airline),
+    though earning rates and upgrade eligibility may vary by agreement.
+    """
+
+    airline_code: str = Field(description="IATA code of the marketing airline (e.g., 'AA')")
+    flight_number: str = Field(description="Flight number under the marketing airline's code")
+    airline_name: str | None = Field(
+        None, description="Full name of the marketing airline (e.g., 'American')"
+    )
+
+
 class FlightLeg(BaseModel):
     """A single flight leg (segment) with airline and timing details."""
 
-    airline: Airline
+    airline: Airline = Field(description="Operating airline (the airline that flies the plane)")
     flight_number: str
     departure_airport: Airport
     arrival_airport: Airport
     departure_datetime: datetime
     arrival_datetime: datetime
     duration: PositiveInt  # in minutes
+    aircraft: str | None = Field(None, description="Aircraft type (e.g., 'Boeing 787')")
+    codeshares: list[CodeshareInfo] | None = Field(
+        None,
+        description=(
+            "Other airlines that sell this same flight under their own flight numbers. "
+            "Useful for loyalty programs: passengers can typically credit miles to "
+            "either the operating or marketing airline when booking a codeshare flight."
+        ),
+    )
 
 
 class FlightResult(BaseModel):
