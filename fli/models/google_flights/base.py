@@ -26,6 +26,7 @@ class SeatType(Enum):
     """Available cabin classes for flights."""
 
     ECONOMY = 1
+    ECONOMY_EXCLUDE_BASIC = 5
     PREMIUM_ECONOMY = 2
     BUSINESS = 3
     FIRST = 4

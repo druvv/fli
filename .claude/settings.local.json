@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /Users/dhruv/projects/fli -name *.txt -o -name *notes* -o -name *research*)"
+    ]
+  }
+}

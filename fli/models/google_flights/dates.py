@@ -229,6 +229,14 @@ class DateSearchFilters(BaseModel):
         else:
             duration_filters = ()
 
+        # Handle economy exclude basic: use ECONOMY seat type with exclude flag
+        if self.seat_type == SeatType.ECONOMY_EXCLUDE_BASIC:
+            api_seat_type = SeatType.ECONOMY.value
+            exclude_basic = 1
+        else:
+            api_seat_type = self.seat_type.value
+            exclude_basic = 0
+
         # Create the main filters structure
         filters = [
             None,  # placeholder
@@ -238,7 +246,7 @@ class DateSearchFilters(BaseModel):
                 serialize(self.trip_type.value),
                 None,  # placeholder
                 [],  # empty array
-                serialize(self.seat_type.value),
+                serialize(api_seat_type),
                 [
                     self.passenger_info.adults,
                     self.passenger_info.children,
@@ -256,6 +264,8 @@ class DateSearchFilters(BaseModel):
                 None,  # placeholder
                 None,  # placeholder
                 1,  # placeholder (hardcoded to 1)
+                *([None] * 10),  # indices 18-27
+                exclude_basic,  # index 28: exclude basic economy fares
             ],
             [
                 serialize(self.from_date),
