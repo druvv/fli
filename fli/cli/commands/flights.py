@@ -128,7 +128,7 @@ def flights(
         typer.Option(
             "--class",
             "-c",
-            help="Cabin class (ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST)",
+            help="Cabin class (ECONOMY, ECONOMY_EXCLUDE_BASIC, PREMIUM_ECONOMY, BUSINESS, FIRST)",
         ),
     ] = "ECONOMY",
     max_stops: Annotated[

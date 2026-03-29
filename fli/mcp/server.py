@@ -98,7 +98,7 @@ class FlightSearchParams(BaseModel):
     )
     cabin_class: str = Field(
         CONFIG.default_cabin_class,
-        description="Cabin class: ECONOMY, PREMIUM_ECONOMY, BUSINESS, or FIRST",
+        description="Cabin class: ECONOMY, ECONOMY_EXCLUDE_BASIC, PREMIUM_ECONOMY, BUSINESS, or FIRST",
     )
     max_stops: str = Field(
         "ANY", description="Maximum stops: ANY, NON_STOP, ONE_STOP, or TWO_PLUS_STOPS"
@@ -130,7 +130,7 @@ class DateSearchParams(BaseModel):
     )
     cabin_class: str = Field(
         CONFIG.default_cabin_class,
-        description="Cabin class: ECONOMY, PREMIUM_ECONOMY, BUSINESS, or FIRST",
+        description="Cabin class: ECONOMY, ECONOMY_EXCLUDE_BASIC, PREMIUM_ECONOMY, BUSINESS, or FIRST",
     )
     max_stops: str = Field(
         "ANY", description="Maximum stops: ANY, NON_STOP, ONE_STOP, or TWO_PLUS_STOPS"
@@ -379,7 +379,7 @@ def search_flights(
     ] = None,
     cabin_class: Annotated[
         str,
-        Field(description="Cabin class: ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST"),
+        Field(description="Cabin class: ECONOMY, ECONOMY_EXCLUDE_BASIC, PREMIUM_ECONOMY, BUSINESS, FIRST"),
     ] = CONFIG.default_cabin_class,
     max_stops: Annotated[
         str,
@@ -454,7 +454,7 @@ def search_dates(
     ] = None,
     cabin_class: Annotated[
         str,
-        Field(description="Cabin class: ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST"),
+        Field(description="Cabin class: ECONOMY, ECONOMY_EXCLUDE_BASIC, PREMIUM_ECONOMY, BUSINESS, FIRST"),
     ] = CONFIG.default_cabin_class,
     max_stops: Annotated[
         str,

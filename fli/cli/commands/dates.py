@@ -76,7 +76,7 @@ def dates(
         typer.Option(
             "--class",
             "-c",
-            help="Cabin class (ECONOMY, PREMIUM_ECONOMY, BUSINESS, FIRST)",
+            help="Cabin class (ECONOMY, ECONOMY_EXCLUDE_BASIC, PREMIUM_ECONOMY, BUSINESS, FIRST)",
         ),
     ] = "ECONOMY",
     sort_by_price: Annotated[
